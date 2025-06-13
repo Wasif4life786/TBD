@@ -9,6 +9,10 @@ class Camera:
         self.target = Vec3(0, 0, 0)
         self.world_up = Vec3(0, 1, 0)
         
+        self.yaw = -math.pi / 2
+        self.pitch = 0.0
+        self.radius = (self.position - self.target).magnitude()
+
         self.projection_type = "perspective"
         self.fov = 45.0  # degrees
         self.aspect_ratio = 16.0 / 9.0
@@ -16,6 +20,13 @@ class Camera:
         self.far = 1000.0
         self.ortho_size = 10.0
 
+    def _update_position_from_angles(self):
+    
+        x = self.target.x + self.radius * math.cos(self.yaw) * math.cos(self.pitch)
+        y = self.target.y + self.radius * math.sin(self.pitch)
+        z = self.target.z + self.radius * math.sin(self.yaw) * math.cos(self.pitch)
+        self.position = Vec3(x, y, z)
+    
     def get_view_matrix(self):
         return Mat4.look_at(self.position, self.target, self.world_up)
 
