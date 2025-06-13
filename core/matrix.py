@@ -1,5 +1,5 @@
 from math import *
-from TBD.core.vector import Vec3, Vec4
+from vector import Vec3, Vec4
 class Mat3:
     def __init__(self, data=None):
         if data is None:
@@ -18,6 +18,7 @@ class Mat3:
             self.data = [[float(data[i][j]) for j in range(3)] for i in range(3)]
         else:
             raise ValueError("Invalid data for Mat3 initialization")
+        
     def __add__(self, other):
         result = []
         for i in range(3):
@@ -26,6 +27,7 @@ class Mat3:
                 row.append(self.data[i][j] + other.data[i][j])
             result.append(row)
         return Mat3(result)
+    
     def __sub__(self, other):
         result = []
         for i in range(3):
@@ -34,6 +36,7 @@ class Mat3:
                 row.append(self.data[i][j] - other.data[i][j])
             result.append(row)
         return Mat3(result)   
+    
     def __mul__(self, other):
         if isinstance(other, Mat3):
             result = [[0.0 for _ in range(3)] for _ in range(3)]
@@ -55,18 +58,22 @@ class Mat3:
                     row.append(self.data[i][j] * other)
                 result.append(row)
             return Mat3(result)   
+        
     def __rmul__(self, scalar):
         return self.__mul__(scalar)
+    
     def transpose(self):
         result = [[0.0 for _ in range(3)] for _ in range(3)]
         for i in range(3):
             for j in range(3):
                 result[j][i] = self.data[i][j]
         return Mat3(result)
+    
     def determinant(self):
         return (self.data[0][0] * (self.data[1][1] * self.data[2][2] - self.data[1][2] * self.data[2][1]) -
                 self.data[0][1] * (self.data[1][0] * self.data[2][2] - self.data[1][2] * self.data[2][0]) +
                 self.data[0][2] * (self.data[1][0] * self.data[2][1] - self.data[1][1] * self.data[2][0]))
+    
     def inverse(self):
         det = self.determinant()
         if abs(det) < 1e-9:
@@ -83,6 +90,7 @@ class Mat3:
         result[2][1] = (self.data[0][1] * self.data[2][0] - self.data[0][0] * self.data[2][1]) * inv_det
         result[2][2] = (self.data[0][0] * self.data[1][1] - self.data[0][1] * self.data[1][0]) * inv_det     
         return Mat3(result)
+    
     @staticmethod
     def rotation_x(angle):
         cos_a = cos(angle)
@@ -92,6 +100,7 @@ class Mat3:
             0, cos_a, -sin_a,
             0, sin_a, cos_a
         ])   
+    
     @staticmethod
     def rotation_y(angle):
         cos_a = cos(angle)
@@ -101,6 +110,7 @@ class Mat3:
             0, 1, 0,
             -sin_a, 0, cos_a
         ])   
+    
     @staticmethod
     def rotation_z(angle):
         cos_a = cos(angle)
@@ -110,6 +120,7 @@ class Mat3:
             sin_a, cos_a, 0,
             0, 0, 1
         ])
+    
     @staticmethod
     def scale(sx, sy, sz):
         return Mat3([
@@ -117,12 +128,14 @@ class Mat3:
             0, sy, 0,
             0, 0, sz
         ])
+    
     def __getitem__(self, index):
         if isinstance(index, tuple) and len(index) == 2:
             row, col = index
             return self.data[row][col]
         else:
             return self.data[index]
+        
     def __setitem__(self, index, value):
         if isinstance(index, tuple) and len(index) == 2:
             row, col = index
@@ -132,12 +145,14 @@ class Mat3:
                 self.data[index] = [float(v) for v in value]
             else:
                 raise ValueError("Row must be a list of 3 elements")   
+            
     def __eq__(self, other):
         for i in range(3):
             for j in range(3):
                 if abs(self.data[i][j] - other.data[i][j]) >= 1e-9:
                     return False
         return True
+    
 class Mat4:
     def __init__(self, data=None):
         if data is None:
@@ -158,6 +173,7 @@ class Mat4:
             self.data = [[float(data[i][j]) for j in range(4)] for i in range(4)]
         else:
             raise ValueError("Invalid data for Mat4 initialization")   
+        
     def __add__(self, other):
         result = []
         for i in range(4):
@@ -166,6 +182,7 @@ class Mat4:
                 row.append(self.data[i][j] + other.data[i][j])
             result.append(row)
         return Mat4(result) 
+    
     def __sub__(self, other):
         result = []
         for i in range(4):
@@ -174,6 +191,7 @@ class Mat4:
                 row.append(self.data[i][j] - other.data[i][j])
             result.append(row)
         return Mat4(result)
+    
     def __mul__(self, other):
         if isinstance(other, Mat4):
             result = [[0.0 for _ in range(4)] for _ in range(4)]
@@ -200,14 +218,17 @@ class Mat4:
                     row.append(self.data[i][j] * other)
                 result.append(row)
             return Mat4(result)
+        
     def __rmul__(self, scalar):
         return self.__mul__(scalar)
+    
     def transpose(self):
         result = [[0.0 for _ in range(4)] for _ in range(4)]
         for i in range(4):
             for j in range(4):
                 result[j][i] = self.data[i][j]
         return Mat4(result)
+    
     def determinant(self):
         det = 0
         for j in range(4):
@@ -223,6 +244,7 @@ class Mat4:
                       submatrix[0][2] * (submatrix[1][0] * submatrix[2][1] - submatrix[1][1] * submatrix[2][0]))  
             det += ((-1) ** j) * self.data[0][j] * sub_det
         return det
+    
     @staticmethod
     def translation(x, y, z):
         return Mat4([
@@ -231,6 +253,7 @@ class Mat4:
             0, 0, 1, z,
             0, 0, 0, 1
         ])
+    
     @staticmethod
     def rotation_x(angle):
         cos_a = cos(angle)
@@ -241,6 +264,7 @@ class Mat4:
             0, sin_a, cos_a, 0,
             0, 0, 0, 1
         ])
+    
     @staticmethod
     def rotation_y(angle):
         cos_a = cos(angle)
@@ -251,6 +275,7 @@ class Mat4:
             -sin_a, 0, cos_a, 0,
             0, 0, 0, 1
         ])
+    
     @staticmethod
     def rotation_z(angle):
         cos_a = cos(angle)
@@ -261,6 +286,7 @@ class Mat4:
             0, 0, 1, 0,
             0, 0, 0, 1
         ])
+    
     @staticmethod
     def scale(sx, sy, sz):
         return Mat4([
@@ -269,6 +295,7 @@ class Mat4:
             0, 0, sz, 0,
             0, 0, 0, 1
         ])
+    
     @staticmethod
     def perspective(fov, aspect, near, far):
         f = 1.0 / tan(fov / 2.0)
@@ -278,6 +305,7 @@ class Mat4:
             0, 0, (far + near) / (near - far), (2 * far * near) / (near - far),
             0, 0, -1, 0
         ])
+    
     @staticmethod
     def orthographic(left, right, bottom, top, near, far):
         return Mat4([
@@ -286,6 +314,7 @@ class Mat4:
             0, 0, -2 / (far - near), -(far + near) / (far - near),
             0, 0, 0, 1
         ])
+    
     @staticmethod
     def look_at(eye, target, up):
         forward = (target - eye).normalize()
@@ -297,18 +326,21 @@ class Mat4:
             -forward.x, -forward.y, -forward.z, forward.dot(eye),
             0, 0, 0, 1
         ])
+    
     def to_mat3(self):
         return Mat3([
             [self.data[0][0], self.data[0][1], self.data[0][2]],
             [self.data[1][0], self.data[1][1], self.data[1][2]],
             [self.data[2][0], self.data[2][1], self.data[2][2]]
         ])
+    
     def __getitem__(self, index):
         if isinstance(index, tuple) and len(index) == 2:
             row, col = index
             return self.data[row][col]
         else:
             return self.data[index]
+        
     def __setitem__(self, index, value):
         if isinstance(index, tuple) and len(index) == 2:
             row, col = index
@@ -318,6 +350,7 @@ class Mat4:
                 self.data[index] = [float(v) for v in value]
             else:
                 raise ValueError("Row must be a list of 4 elements")
+            
     def __eq__(self, other):
         for i in range(4):
             for j in range(4):
