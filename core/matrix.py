@@ -1,5 +1,5 @@
 from math import *
-from vector import Vec3, Vec4
+from core.vector import Vec3, Vec4
 class Mat3:
     def __init__(self, data=None):
         if data is None:
