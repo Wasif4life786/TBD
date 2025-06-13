@@ -61,6 +61,7 @@ def set_frame_center(self, center):
     offset = self.position - self.target
     self.target = center
     self.position = center + offset
+
 def project_vertex(vertex, mvp_matrix, screen_width, screen_height):
     projected = mvp_matrix * vertex.to_vec4(1.0)
     screen = projected.perspective_divide()
