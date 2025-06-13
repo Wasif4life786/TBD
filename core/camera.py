@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import math
 from core.matrix import Mat4
 from core.vector import Vec3
@@ -41,3 +42,11 @@ class Camera:
             )
         else:
             raise ValueError(f"Unknown projection type: {self.projection_type}")
+=======
+class Camera:
+    def get_view_matrix():
+
+    def get_projection_matrix():
+
+    def get_mvp_matrix(model_matrix):
+>>>>>>> 152e3e806b22f551fd638a8a5e2024634e9c6d9a

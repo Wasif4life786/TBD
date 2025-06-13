@@ -1,16 +1,20 @@
 import math
+<<<<<<< HEAD
 
 from core.vector import Vec2, Vec3
 def DegToRad(deg):
     return float(deg * math.pi/180)
 def RadToDeg(rad):
     return float(rad * 180/math.pi)
+=======
+>>>>>>> 152e3e806b22f551fd638a8a5e2024634e9c6d9a
 def clamp(x,MIN,MAX):
     if x < MIN:
         return MIN
     elif x > MAX:
         return MAX
     return x
+<<<<<<< HEAD
 def get_forward_vector(self):
     return (self.target - self.position).normalize()
 
@@ -59,3 +63,13 @@ def set_frame_center(self, center):
     offset = self.position - self.target
     self.target = center
     self.position = center + offset
+=======
+def project_vertex(vertex, mvp_matrix, screen_width, screen_height):
+    projected = mvp_matrix * vertex.to_vec4(1.0)
+    screen = projected.perspective_divide()
+    return (
+        int((screen.x + 1) * screen_width / 2),
+        int((1 - screen.y) *screen_height / 2)
+    )
+
+>>>>>>> 152e3e806b22f551fd638a8a5e2024634e9c6d9a
