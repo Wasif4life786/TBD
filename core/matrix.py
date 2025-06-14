@@ -209,7 +209,7 @@ class Mat4:
         elif hasattr(other, 'x') and hasattr(other, 'y') and hasattr(other, 'z'):
             vec4 = Vec4(other.x, other.y, other.z, 1.0)
             result = self * vec4
-            return result.to_vec3()
+            return result
         else:
             result = []
             for i in range(4):

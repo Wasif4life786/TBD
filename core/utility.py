@@ -26,7 +26,6 @@ def get_up_vector(self):
     return right.cross(forward).normalize()
 
 def world_to_screen(self, world_pos, viewport_width, viewport_height):
-    """Project 3D world coordinates to 2D screen coordinates"""
     view_matrix = self.get_view_matrix()
     proj_matrix = self.get_projection_matrix()
     clip_pos = proj_matrix * view_matrix * world_pos
@@ -62,11 +61,10 @@ def set_frame_center(self, center):
     self.target = center
     self.position = center + offset
 
-def project_vertex(vertex, mvp_matrix, screen_width, screen_height):
-    projected = mvp_matrix * vertex.to_vec4(1.0)
-    screen = projected.perspective_divide()
-    return (
-        int((screen.x + 1) * screen_width / 2),
-        int((1 - screen.y) *screen_height / 2)
-    )
-
+def linspace(start, stop, num=50):
+    if num <= 0:
+        return []
+    if num == 1:
+        return [float(start)]
+    step = (float(stop) - float(start)) / (num - 1)
+    return [start + i * step for i in range(num)]
