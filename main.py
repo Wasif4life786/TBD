@@ -1,13 +1,12 @@
 import pygame as pg
 import math
-from core.camera import Camera
 from core.vector import Vec3
+from engine.scenes import setup_spinning_shapes_scene, setup_vector_field_scene, setup_parametric_curve_scene, setup_surface_plot_scene
+from core.camera import Camera
 from render.projection import Renderer
-from engine.scenes import setup_spinning_shapes_scene, setup_vector_field_scene, setup_parametric_curve_scene
 
-# Change this variable to "shapes", "vector_field", or "parametric_curve"
-ACTIVE_SCENE_NAME = "vector_field"
-
+# Change this variable to "shapes", "vector_field", "parametric_curve", or "surface_plot"
+ACTIVE_SCENE_NAME = "surface_plot"
 def main():
     pg.init()
     screen_width, screen_height = 1024, 768
@@ -21,17 +20,17 @@ def main():
     scene_data = {}
     if ACTIVE_SCENE_NAME == "shapes":
         scene_data = setup_spinning_shapes_scene()
-        pg.display.set_caption("WANIM - Spinning Shapes")
     elif ACTIVE_SCENE_NAME == "vector_field":
         scene_data = setup_vector_field_scene()
-        pg.display.set_caption("WANIM - Vector Field")
     elif ACTIVE_SCENE_NAME == "parametric_curve":
         scene_data = setup_parametric_curve_scene()
-        pg.display.set_caption("WANIM - Parametric Curve")
+    elif ACTIVE_SCENE_NAME == "surface_plot":
+        scene_data = setup_surface_plot_scene()
     mouse_down = False
     last_mouse_pos = None
     rotation_speed = 0.005
     zoom_speed = 0.1
+    time = 0
     running = True
     while running:
         for event in pg.event.get():
@@ -49,17 +48,18 @@ def main():
                 camera.pitch = max(-math.pi/2 + 0.01, min(math.pi/2 - 0.01, camera.pitch + dy * rotation_speed))
                 camera._update_position_from_angles()
                 last_mouse_pos = event.pos
-        if scene_data.get("update"):
-            scene_data["update"]()
+        time += 0.05  
+        update_func = scene_data.get("update")
+        if update_func:
+            update_func(time)
         screen.fill((20, 20, 30))
         if scene_data["type"] == "meshes":
             renderer.render(scene_data["objects"], scene_data["light"])
         elif scene_data["type"] == "lines":
             mvp = camera.get_projection_matrix() * camera.get_view_matrix()
-            renderer.render_lines(scene_data["lines"], scene_data["color"], mvp)
+            renderer.render_lines(scene_data["lines"], scene_data["colour"], mvp)
         pg.display.flip()
         clock.tick(60)
     pg.quit()
-
 if __name__ == "__main__":
     main()

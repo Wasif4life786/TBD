@@ -4,12 +4,12 @@ from core.gameobject import GameObject
 from core.geometry import create_cube, create_sphere
 from core.utility import linspace
 from render.parametric_curves import ParametricCurve
+from render.surface_plot import SurfacePlot
 from render.vectorfield import VectorField
 
 def setup_spinning_shapes_scene():
     cube_geom = create_cube(size=1.5)
     sphere_geom = create_sphere(radius=1.0, rings=12, sectors=24)
-    
     cube_obj = GameObject(vertices=cube_geom[0], triangles=cube_geom[1])
     cube_obj.position = Vec3(-2, 0, 0)
     
@@ -19,7 +19,7 @@ def setup_spinning_shapes_scene():
     scene_objects = [cube_obj, sphere_obj]
     light = Vec3(0.5, -1, -1).normalize()
     
-    def update_scene():
+    def update_scene(time):
         cube_obj.rotation.y += 0.01
         cube_obj.rotation.x += 0.005
         sphere_obj.rotation.z += 0.015
@@ -37,7 +37,7 @@ def setup_vector_field_scene():
     return {
         "type": "lines",
         "lines": field.lines,
-        "color": (100, 200, 255)
+        "colour": (100, 200, 255)
     }
 
 def x_helix(t): return math.cos(t * 2) * 2
@@ -50,5 +50,28 @@ def setup_parametric_curve_scene():
     return {
         "type": "lines",
         "lines": helix.get_line_segments(),
-        "color": (255, 100, 100)
+        "colour": (255, 100, 100)
+    }
+
+def ripple_function(x, y, time):
+    dist = math.sqrt(x**2 + y**2)
+    return math.sin(dist * 2.5 - time) * 0.75
+
+def setup_surface_plot_scene():
+    plot = SurfacePlot(
+        surface_function=ripple_function,
+        x_bounds=(-5, 5),
+        y_bounds=(-5, 5),
+        resolution=40
+    )
+    plot.update(0)
+    surface_obj = GameObject(vertices=plot.vertices, triangles=plot.triangles)
+    surface_obj.color = (0, 80, 255)
+    def update_scene(time):
+        plot.update(time)
+    return {
+        "type": "meshes",
+        "objects": [surface_obj],
+        "light": Vec3(0, -1, -0.5).normalize(),
+        "update": update_scene
     }

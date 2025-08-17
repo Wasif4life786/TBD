@@ -30,7 +30,7 @@ class Renderer:
                 v2_world = model_matrix * v2
                 normal_world = (v1_world.to_vec3() - v0_world.to_vec3()).cross(v2_world.to_vec3() - v0_world.to_vec3()).normalize()
                 intensity = max(0.1, min(1, normal_world.dot(light_direction_world)))
-                face_color = (int(200 * intensity), int(200 * intensity), int(255 * intensity))
+                face_color = (int(255 * intensity), int(100 * intensity), int(203 * intensity))
                 v0_view = view_matrix * v0_world
                 v1_view = view_matrix * v1_world
                 v2_view = view_matrix * v2_world
